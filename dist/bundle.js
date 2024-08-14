@@ -11,7 +11,9 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   addTask: () => (/* binding */ addTask),
-/* harmony export */   getTasks: () => (/* binding */ getTasks)
+/* harmony export */   deleteTask: () => (/* binding */ deleteTask),
+/* harmony export */   getTasks: () => (/* binding */ getTasks),
+/* harmony export */   updateTask: () => (/* binding */ updateTask)
 /* harmony export */ });
 //Lista de tareas
 let tasks = JSON.parse(localStorage.getItem('tasks') )||[];
@@ -23,12 +25,29 @@ const addTask = (task) =>{
         text: task,
         completed: false,
     };
-    task.push(newTask);
+    tasks.push(newTask);
     localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
 //Función para poder traer la lista de tareas
 const getTasks = () => tasks;
+
+//Función para eliminar una tarea de la lista
+const deleteTask = (id) => {
+      tasks = tasks.filter((task) => task.id !== parseInt(id));
+      localStorage.setItem('tasks',JSON.stringify(tasks));
+};
+
+//Función para actualizar una tarea 
+const updateTask = (id) => {
+    tasks = tasks.map((task) => {
+       if(task.id === parseInt (id)) {
+        task.completed = !task.completed;
+       }
+       return task;
+    });
+    localStorage.setItem('tasks',JSON.stringify(tasks));
+}
 
 /***/ }),
 
@@ -46,10 +65,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const renderTask = () =>{
-    const taskList = Document.getElementById("task-list");
+    const taskList = document.getElementById("task-list");
     taskList.innerHTML = "";
 
-    const tasks = getTask ();
+    const tasks = (0,_task__WEBPACK_IMPORTED_MODULE_0__.getTasks)();
     tasks.forEach((task) => {
         const li = document.createElement("li");
         li.setAttribute("data-id", task.id);
@@ -157,6 +176,20 @@ document.addEventListener("DOMContentLoaded", () =>{
        }
     });
 
+    //Agregar el evento para los botones 
+    document.getElementById("task-list").addEventListener("click", (e) =>{
+       if(e.target.classList.contains("delete")) {
+        const taskId = e.target.parentElement.getAttribute("data-id");
+        (0,_task__WEBPACK_IMPORTED_MODULE_1__.deleteTask)(taskId);
+        renderTasks();
+       }
+
+       if(e.target.classList.contains("toggle")){
+        const taskId = e.target.parentElement.getAttribute("data-id");
+        (0,_task__WEBPACK_IMPORTED_MODULE_1__.updateTask)(taskId);
+        (0,_ui__WEBPACK_IMPORTED_MODULE_0__.renderTask)();
+       }
+    });
 });
 /******/ })()
 ;

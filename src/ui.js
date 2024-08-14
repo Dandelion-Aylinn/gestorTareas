@@ -1,10 +1,10 @@
 import { getTasks } from './task';
 
 export const renderTask = () =>{
-    const taskList = Document.getElementById("task-list");
+    const taskList = document.getElementById("task-list");
     taskList.innerHTML = "";
 
-    const tasks = getTask ();
+    const tasks = getTasks();
     tasks.forEach((task) => {
         const li = document.createElement("li");
         li.setAttribute("data-id", task.id);
